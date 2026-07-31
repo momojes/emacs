@@ -41,6 +41,11 @@
 (define-key my-drafts-map (kbd "g") #'my-drafts-magit-status)
 (define-key my-drafts-map (kbd "n") #'my-new-draft-post)
 
+;;; Git
+
+(global-set-key (kbd "C-c g") #'magit-status)
+(global-unset-key (kbd "C-x g"))
+
 ;;; Hugo blog shortcuts
 
 (define-prefix-command 'my-blog-map)
