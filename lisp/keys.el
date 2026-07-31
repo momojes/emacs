@@ -73,5 +73,16 @@
 
 (global-set-key (kbd "C-c w") #'my-open-welcome)
 
+;;; Spelling
+
+(define-prefix-command 'my-spelling-map)
+(global-set-key (kbd "C-c s") #'my-spelling-map)
+
+(define-key my-spelling-map (kbd "b")
+  #'my-check-buffer-spelling)
+
+(define-key my-spelling-map (kbd "t")
+  #'my-toggle-spell-checking)
+
 (provide 'keys)
 ;;; keys.el ends here

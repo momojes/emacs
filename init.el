@@ -13,6 +13,7 @@
 (require 'appearance)
 (require 'packages)
 (require 'programming)
+(require 'prose)
 (require 'org-config)
 (require 'writing)
 (require 'blog)
