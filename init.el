@@ -15,6 +15,7 @@
 (require 'org-config)
 (require 'writing)
 (require 'blog)
+(require 'welcome)
 (require 'keys)
 
 ;; Load settings written by the Customize interface.

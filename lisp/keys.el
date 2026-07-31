@@ -67,7 +67,11 @@
             #'my-hugo-magit-status)
 
 (define-key my-blog-map (kbd "p")
-  #'my-hugo-publish-current-post)
+            #'my-hugo-publish-current-post)
+
+;;; Welcome screen
+
+(global-set-key (kbd "C-c w") #'my-open-welcome)
 
 (provide 'keys)
 ;;; keys.el ends here
