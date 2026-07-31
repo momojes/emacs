@@ -10,5 +10,35 @@
    (interactive)
    (find-file user-init-file)))
 
+;;; Drafts repository shortcuts
+
+(define-prefix-command 'my-drafts-map)
+(global-set-key (kbd "C-c d") 'my-drafts-map)
+
+(defun my-open-drafts-ideas ()
+  "Open the writing ideas file."
+  (interactive)
+  (find-file my-drafts-ideas-file))
+
+(defun my-open-drafts-directory ()
+  "Open the drafts repository in Dired."
+  (interactive)
+  (dired my-drafts-directory))
+
+(defun my-open-drafts-posts ()
+  "Open the drafts posts directory in Dired."
+  (interactive)
+  (dired my-drafts-posts-directory))
+
+(defun my-drafts-magit-status ()
+  "Open Magit for the drafts repository."
+  (interactive)
+  (magit-status my-drafts-directory))
+
+(define-key my-drafts-map (kbd "i") #'my-open-drafts-ideas)
+(define-key my-drafts-map (kbd "d") #'my-open-drafts-directory)
+(define-key my-drafts-map (kbd "p") #'my-open-drafts-posts)
+(define-key my-drafts-map (kbd "g") #'my-drafts-magit-status)
+
 (provide 'keys)
 ;;; keys.el ends here
