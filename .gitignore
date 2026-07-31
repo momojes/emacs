@@ -1,0 +1,27 @@
+# Machine-specific settings
+local.el
+
+# Emacs Customize output
+custom.el
+
+# Installed packages and native compilation cache
+elpa/
+eln-cache/
+
+# Generated state and cache files
+auto-save-list/
+var/
+url/
+transient/
+history
+places
+recentf
+projects
+bookmarks
+network-security.data
+
+# Temporary, lock, backup, and compiled files
+*~
+\#*\#
+.\#*
+*.elc
