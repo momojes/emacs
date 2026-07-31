@@ -66,5 +66,8 @@
 (define-key my-blog-map (kbd "g")
             #'my-hugo-magit-status)
 
+(define-key my-blog-map (kbd "p")
+  #'my-hugo-publish-current-post)
+
 (provide 'keys)
 ;;; keys.el ends here
