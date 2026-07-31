@@ -13,6 +13,7 @@
 (require 'appearance)
 (require 'packages)
 (require 'org-config)
+(require 'writing)
 (require 'keys)
 
 ;; Load settings written by the Customize interface.

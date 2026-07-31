@@ -39,6 +39,7 @@
 (define-key my-drafts-map (kbd "d") #'my-open-drafts-directory)
 (define-key my-drafts-map (kbd "p") #'my-open-drafts-posts)
 (define-key my-drafts-map (kbd "g") #'my-drafts-magit-status)
+(define-key my-drafts-map (kbd "n") #'my-new-draft-post)
 
 (provide 'keys)
 ;;; keys.el ends here
