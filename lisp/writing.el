@@ -28,28 +28,27 @@
 
     (find-file path)
 
-    (insert
-     (format
-      "#+title: %s
+   (insert
+ (format
+  "#+title: %s
 #+date: %s
+#+hugo_base_dir: %s
+#+hugo_section: posts
+#+hugo_slug: %s
+#+hugo_draft: true
 #+options: toc:nil num:nil
-#+filetags: :draft:
 
 * Summary
 
-%?
+%%?
 
 * Draft
 
 "
-      title
-      (format-time-string "%Y-%m-%d")))
-
-    ;; Remove the template cursor marker and place point there.
-    (goto-char (point-min))
-    (search-forward "%?")
-    (replace-match "")
-    (save-buffer)))
+  title
+  (format-time-string "%Y-%m-%d")
+  my-hugo-directory
+  slug))
 
 (provide 'writing)
 ;;; writing.el ends here

@@ -41,5 +41,25 @@
 (define-key my-drafts-map (kbd "g") #'my-drafts-magit-status)
 (define-key my-drafts-map (kbd "n") #'my-new-draft-post)
 
+;;; Hugo blog shortcuts
+
+(define-prefix-command 'my-blog-map)
+(global-set-key (kbd "C-c b") #'my-blog-map)
+
+(define-key my-blog-map (kbd "e")
+            #'my-hugo-export-current-post)
+
+(define-key my-blog-map (kbd "s")
+            #'my-hugo-start-server)
+
+(define-key my-blog-map (kbd "k")
+            #'my-hugo-stop-server)
+
+(define-key my-blog-map (kbd "v")
+            #'my-hugo-open-preview)
+
+(define-key my-blog-map (kbd "g")
+            #'my-hugo-magit-status)
+
 (provide 'keys)
 ;;; keys.el ends here

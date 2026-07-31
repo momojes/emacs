@@ -61,5 +61,12 @@
    ("M-s l"   . consult-line)
    ("M-s r"   . consult-ripgrep)))
 
+;;; Hugo exporting
+
+(use-package ox-hugo
+  :after ox)
+
 (provide 'packages)
 ;;; packages.el ends here
+
+
