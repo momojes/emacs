@@ -66,6 +66,21 @@
 (use-package ox-hugo
   :after ox)
 
+;;; Focused writing
+
+(use-package olivetti
+  :commands olivetti-mode
+
+  :custom
+  ;; Width of the centered writing area, in columns.
+  (olivetti-body-width 82)
+
+  ;; Keep the writing area usable in narrower windows.
+  (olivetti-minimum-body-width 60)
+
+  ;; Restore visual-line-mode to its previous state when leaving.
+  (olivetti-recall-visual-line-mode-entry-state t))
+
 (provide 'packages)
 ;;; packages.el ends here
 

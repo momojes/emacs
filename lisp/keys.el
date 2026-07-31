@@ -82,7 +82,12 @@
   #'my-check-buffer-spelling)
 
 (define-key my-spelling-map (kbd "t")
-  #'my-toggle-spell-checking)
+            #'my-toggle-spell-checking)
+
+;;; Focused writing
+
+(global-set-key (kbd "C-c z")
+                #'my-focus-writing-mode)
 
 (provide 'keys)
 ;;; keys.el ends here
