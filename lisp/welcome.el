@@ -15,6 +15,11 @@
     "└────────────────────────────────────┘")
   "Banner displayed on the welcome screen.")
 
+(defvar my-welcome-shown nil
+  "Non-nil after the welcome screen has appeared automatically.")
+
+;;; Rendering helpers
+
 (defun my-welcome--run-button (button)
   "Run the command attached to BUTTON."
   (let ((command (button-get button 'my-command)))
@@ -22,18 +27,29 @@
         (call-interactively command)
       (user-error "Command is unavailable: %s" command))))
 
+(defun my-welcome--insert-centered-line (text &optional face)
+  "Insert TEXT centered within the current window using FACE."
+  (let* ((width (max 1 (window-body-width)))
+         (padding
+          (max 0
+               (/ (- width (string-width text)) 2))))
+    (insert (make-string padding ?\s))
+    (insert (propertize text 'face face))
+    (insert "\n")))
+
 (defun my-welcome--insert-heading (text)
-  "Insert heading TEXT."
-  (insert
-   (propertize text
-               'face 'font-lock-keyword-face))
-  (insert "\n\n"))
+  "Insert section heading TEXT."
+  (my-welcome--insert-centered-line
+   text
+   'font-lock-keyword-face)
+  (insert "\n"))
 
 (defun my-welcome--insert-button (key description command)
-  "Insert a button for COMMAND.
+  "Insert a welcome-screen button.
 
-KEY is the displayed shortcut and DESCRIPTION describes the action."
-  (insert "  ")
+KEY is the displayed shortcut, DESCRIPTION explains the action,
+and COMMAND is called when the button is activated."
+  (insert "    ")
 
   (insert-text-button
    key
@@ -49,73 +65,96 @@ KEY is the displayed shortcut and DESCRIPTION describes the action."
     'face 'font-lock-comment-face)))
 
 (defun my-welcome-render ()
-  "Render the welcome screen in the current buffer."
+  "Render the custom welcome screen in the current buffer."
   (let ((inhibit-read-only t))
     (erase-buffer)
 
     (insert "\n")
 
     (dolist (line my-welcome-banner)
-      (insert
-       (propertize line
-                   'face 'font-lock-function-name-face))
-      (insert "\n"))
+      (my-welcome--insert-centered-line
+       line
+       'font-lock-function-name-face))
 
     (insert "\n")
 
-    (insert
-     (propertize
-      "A quiet place to write, organize, and build.\n\n"
-      'face 'font-lock-comment-face))
+    (my-welcome--insert-centered-line
+     "A quiet place to write, organize, and build."
+     'font-lock-comment-face)
 
+    (insert "\n")
     (my-welcome--insert-heading "QUICK ACTIONS")
 
     (my-welcome--insert-button
-     "[f]" "Find a file" #'find-file)
+     "[f]"
+     "Find a file"
+     #'find-file)
 
     (my-welcome--insert-button
-     "[b]" "Switch buffers" #'consult-buffer)
+     "[b]"
+     "Switch buffers"
+     #'consult-buffer)
 
     (my-welcome--insert-button
-     "[a]" "Open Org agenda" #'org-agenda)
+     "[a]"
+     "Open Org agenda"
+     #'org-agenda)
 
     (my-welcome--insert-button
-     "[c]" "Capture an Org entry" #'org-capture)
+     "[c]"
+     "Capture an Org entry"
+     #'org-capture)
 
     (my-welcome--insert-button
-     "[g]" "Open Magit" #'magit-status)
+     "[g]"
+     "Open Magit"
+     #'magit-status)
 
     (insert "\n")
     (my-welcome--insert-heading "WRITING")
 
     (my-welcome--insert-button
-     "[d]" "Create a new blog draft" #'my-new-draft-post)
+     "[d]"
+     "Create a new blog draft"
+     #'my-new-draft-post)
 
     (my-welcome--insert-button
-     "[i]" "Open writing ideas" #'my-open-drafts-ideas)
+     "[i]"
+     "Open writing ideas"
+     #'my-open-drafts-ideas)
 
     (my-welcome--insert-button
-     "[p]" "Open draft posts" #'my-open-drafts-posts)
+     "[p]"
+     "Open draft posts"
+     #'my-open-drafts-posts)
 
     (insert "\n")
     (my-welcome--insert-heading "HUGO")
 
     (my-welcome--insert-button
-     "[s]" "Start Hugo preview server" #'my-hugo-start-server)
+     "[s]"
+     "Start Hugo preview server"
+     #'my-hugo-start-server)
 
     (my-welcome--insert-button
-     "[h]" "Open local Hugo preview" #'my-hugo-open-preview)
+     "[h]"
+     "Open local Hugo preview"
+     #'my-hugo-open-preview)
 
     (my-welcome--insert-button
-     "[m]" "Open blog repository in Magit" #'my-hugo-magit-status)
+     "[m]"
+     "Open blog repository in Magit"
+     #'my-hugo-magit-status)
 
     (insert "\n")
-    (insert
-     (propertize
-      "Press q to close this screen.\n"
-      'face 'shadow))
+
+    (my-welcome--insert-centered-line
+     "Press q to close this screen."
+     'shadow)
 
     (goto-char (point-min))))
+
+;;; Welcome major mode
 
 (defvar my-welcome-mode-map
   (let ((map (make-sparse-keymap)))
@@ -144,50 +183,68 @@ KEY is the displayed shortcut and DESCRIPTION describes the action."
   (setq-local truncate-lines t)
   (display-line-numbers-mode -1))
 
+;;; Opening the welcome screen
+
 (defun my-welcome-buffer ()
   "Create, render, and return the welcome buffer."
-  (let ((buffer (get-buffer-create my-welcome-buffer-name)))
+  (let ((buffer
+         (get-buffer-create my-welcome-buffer-name)))
     (with-current-buffer buffer
       (my-welcome-mode)
       (my-welcome-render))
     buffer))
 
 (defun my-open-welcome ()
-  "Open the custom welcome screen."
+  "Open the custom welcome screen manually."
   (interactive)
   (switch-to-buffer (my-welcome-buffer)))
+
+;;; Automatic startup behavior
 
 (defun my-welcome--display-in-frame (frame)
   "Display the welcome screen in FRAME."
   (when (frame-live-p frame)
     (with-selected-frame frame
       (when (display-graphic-p)
-        (let ((window (frame-selected-window frame)))
-          (set-window-buffer window (my-welcome-buffer))
-          (select-window window))))))
+        (switch-to-buffer
+         (my-welcome-buffer))))))
 
-(defun my-welcome--schedule-client-frame ()
-  "Schedule the welcome screen for a new client frame."
-  (let ((frame (selected-frame)))
-    (run-at-time
-     0.2 nil
-     #'my-welcome--display-in-frame
-     frame)))
+(defun my-welcome--show-once-in-client-frame ()
+  "Show the welcome screen in the first graphical client frame only."
+  (when (and (display-graphic-p)
+             (not my-welcome-shown))
+    (setq my-welcome-shown t)
 
-(defun my-welcome--install-server-hook ()
-  "Install the hook used by graphical Emacs client frames."
+    ;; Give the new graphical frame a moment to finish opening.
+    (let ((frame (selected-frame)))
+      (run-at-time
+       0.15 nil
+       #'my-welcome--display-in-frame
+       frame))))
+
+(defun my-welcome--show-once-at-startup ()
+  "Show the welcome screen once during ordinary Emacs startup."
+  (when (and (display-graphic-p)
+             (not my-welcome-shown))
+    (setq my-welcome-shown t)
+    (my-open-welcome)))
+
+;; Ordinary Emacs startup.
+(unless (daemonp)
   (add-hook
-   'server-after-make-frame-hook
-   #'my-welcome--schedule-client-frame))
+   'emacs-startup-hook
+   #'my-welcome--show-once-at-startup))
 
-;; Normal non-daemon startup.
-(setq initial-buffer-choice #'my-welcome-buffer)
-
-;; Daemon/client startup.
+;; First graphical frame created through emacsclient.
 (if (featurep 'server)
-    (my-welcome--install-server-hook)
+    (add-hook
+     'server-after-make-frame-hook
+     #'my-welcome--show-once-in-client-frame)
+
   (with-eval-after-load 'server
-    (my-welcome--install-server-hook)))
+    (add-hook
+     'server-after-make-frame-hook
+     #'my-welcome--show-once-in-client-frame)))
 
 (provide 'welcome)
 ;;; welcome.el ends here
