@@ -12,6 +12,7 @@
 (require 'core)
 (require 'appearance)
 (require 'packages)
+(require 'programming)
 (require 'org-config)
 (require 'writing)
 (require 'blog)
