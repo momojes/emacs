@@ -6,7 +6,7 @@
   "*Welcome*"
   "Name of the custom welcome buffer.")
 
-(defconst my-welcome-banner
+(defvar my-welcome-banner
   '("┌────────────────────────────────────┐"
     "│               EMACS                │"
     "│                                    │"

@@ -8,6 +8,10 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+;; Remove the desktop window title bar and borders.
+(add-to-list 'default-frame-alist '(undecorated . t))
+(add-to-list 'initial-frame-alist '(undecorated . t))
+
 ;; Avoid resizing the frame after startup.
 (setq frame-inhibit-implied-resize t)
 
