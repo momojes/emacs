@@ -6,13 +6,37 @@
   "*Welcome*"
   "Name of the custom welcome buffer.")
 
+(defvar my-welcome-system-label "GNU/Linux"
+  "System/window-manager label shown in the welcome banner.")
+
+(defvar my-welcome-host-label (system-name)
+  "Host label shown in the welcome banner.")
+
+(defun my-welcome-center-text (text width)
+  "Center TEXT inside WIDTH characters."
+  (let* ((padding (- width (string-width text)))
+         (left (/ padding 2))
+         (right (- padding left)))
+    (concat
+     (make-string left ?\s)
+     text
+     (make-string right ?\s))))
+
+(defun my-welcome-make-banner ()
+  "Build the welcome banner using local machine labels."
+  (list
+   "┌────────────────────────────────┐"
+   "│             EMACS              │"
+   "│                                │"
+  (format "│%s│"
+        (my-welcome-center-text my-welcome-system-label 32))
+
+  (format "│%s│"
+        (my-welcome-center-text my-welcome-host-label 32))
+   "└────────────────────────────────┘"))
+
 (defvar my-welcome-banner
-  '("┌────────────────────────────────────┐"
-    "│               EMACS                │"
-    "│                                    │"
-    "│      Arch Linux + Window Maker     │"
-    "│             thinkTaro              │"
-    "└────────────────────────────────────┘")
+  (my-welcome-make-banner)
   "Banner displayed on the welcome screen.")
 
 (defvar my-welcome-shown nil

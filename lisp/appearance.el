@@ -10,7 +10,7 @@
     (when (display-graphic-p)
       (set-face-attribute
        'default nil
-       :family "Maple Mono"
+       :family "Maple Mono Normal"
        :height 120))))
 
 (my-apply-font)
